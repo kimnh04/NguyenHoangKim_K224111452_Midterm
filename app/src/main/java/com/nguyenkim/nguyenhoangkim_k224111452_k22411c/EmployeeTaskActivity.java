@@ -1,37 +1,64 @@
+// app/src/main/java/com/nguyenkim/nguyenhoangkim_k224111452_k22411c/EmployeeTaskActivity.java
 package com.nguyenkim.nguyenhoangkim_k224111452_k22411c;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.connectors.CustomerTaskConnector;
+import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.adapters.DatabaseAdapter;
 import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.connectors.SQLiteConnector;
-import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.models.CustomerTask;
+import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.models.Task;
 import java.util.*;
 
 public class EmployeeTaskActivity extends AppCompatActivity {
-    ListView listView;
-    ArrayAdapter<String> adapter;
-    ArrayList<String> customerLines = new ArrayList<>();
+    private ListView lvTasks;
+    private DatabaseAdapter dbAdapter;
+    private List<Task> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_task);
 
-        listView = findViewById(R.id.listViewCustomers);
+        lvTasks = findViewById(R.id.lvTasks);
+        setupDatabase();
+        loadTasks();
+        setupListItemClick();
+    }
 
+    private void setupDatabase() {
         SQLiteConnector connector = new SQLiteConnector(this);
-        CustomerTaskConnector customerConnector = new CustomerTaskConnector(connector.openDatabase());
+        connector.copyDatabaseFromAssets();
+        dbAdapter = new DatabaseAdapter(connector.openDatabase());
+    }
 
-        // Giả sử taskId = 1 để test
-        List<CustomerTask> customers = customerConnector.getCustomersByTaskId(1);
+    private void loadTasks() {
+        // For testing, using accountId = 3 (can be replaced with actual logged-in account ID)
+        tasks = dbAdapter.getEmployeeTasks(3);
+        ArrayList<String> displayList = new ArrayList<>();
 
-        for (CustomerTask c : customers) {
-            String line = c.customerName + " - " + c.phone + (c.isCalled() ? " ✅" : " ❌");
-            customerLines.add(line);
+        for (Task task : tasks) {
+            String status = task.isCompleted() ? "✅" : "❌";
+            String line = String.format("%s (%s) [%s] %s",
+                    task.getTitle(),
+                    task.getDateAssigned(),
+                    task.getProgress(),
+                    status
+            );
+            displayList.add(line);
         }
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, customerLines);
-        listView.setAdapter(adapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, displayList);
+        lvTasks.setAdapter(adapter);
+    }
+
+    private void setupListItemClick() {
+        lvTasks.setOnItemClickListener((parent, view, position, id) -> {
+            Task task = tasks.get(position);
+            Intent intent = new Intent(this, ListCustomerActivity.class);
+            intent.putExtra("taskId", task.getId());
+            startActivity(intent);
+        });
     }
 }

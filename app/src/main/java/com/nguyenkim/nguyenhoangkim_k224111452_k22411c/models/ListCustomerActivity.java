@@ -8,15 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.connectors.CustomerTaskConnector;
 import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.connectors.SQLiteConnector;
 import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.models.CustomerTask;
+import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.adapters.CustomerTaskAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ListCustomerActivity extends AppCompatActivity {
-
     ListView lvCustomers;
-    ArrayAdapter<String> adapter;
-    ArrayList<String> displayList;
+    CustomerTaskAdapter adapter;
+    ArrayList<CustomerTask> customerList;
     CustomerTaskConnector connector;
 
     @Override
@@ -25,7 +24,7 @@ public class ListCustomerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_customer);
 
         lvCustomers = findViewById(R.id.lvCustomers);
-        displayList = new ArrayList<>();
+        customerList = new ArrayList<>();
 
         int taskId = getIntent().getIntExtra("taskId", -1);
         if (taskId == -1) {
@@ -38,13 +37,20 @@ public class ListCustomerActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.openDatabase();
         connector = new CustomerTaskConnector(db);
 
-        List<CustomerTask> customers = connector.getCustomersByTaskId(taskId);
-        for (CustomerTask c : customers) {
-            String status = c.isCalled() ? "✅" : "❌";
-            displayList.add(c.customerName + " (" + c.phone + ") " + status);
-        }
-
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, displayList);
+        customerList.addAll(connector.getCustomersByTaskId(taskId));
+        adapter = new CustomerTaskAdapter(this, customerList);
         lvCustomers.setAdapter(adapter);
+
+        lvCustomers.setOnItemClickListener((parent, view, position, id) -> {
+            CustomerTask task = customerList.get(position);
+            if (!task.isCalled()) {
+                connector.markCustomerCalled(task.id);
+                task.isCalled = 1;
+                adapter.notifyDataSetChanged();
+                Toast.makeText(this, "Đã gọi khách: " + task.customerName, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Khách đã được gọi rồi.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
