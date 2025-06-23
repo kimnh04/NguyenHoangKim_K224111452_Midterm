@@ -15,6 +15,13 @@
         android:textSize="20sp"
         android:layout_marginBottom="8dp" />
 
+    <Button
+        android:id="@+id/btnAddTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+ Thêm Task mới"
+        android:layout_marginBottom="12dp"/>
+
     <ListView
         android:id="@+id/listViewTasks"
         android:layout_width="match_parent"
