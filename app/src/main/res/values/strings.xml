@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">NGUYENHOANGKIM_K224111452_K22411C</string>
+    <string name="title_login_title">Login</string>
+    <string name="title_student_information">Student Information</string>
+    <string name="title_student_id">Student ID: K224111452</string>
+    <string name="title_student_name">Student Name: Nguyễn Hoàng Kim</string>
+    <string name="title_email">Email: kimnh22411c@st.uel.edu.vn</string>
+    <string name="title_class_id">Class ID: K22411C</string>
+    <string name="menu_about">About</string>
+</resources>
