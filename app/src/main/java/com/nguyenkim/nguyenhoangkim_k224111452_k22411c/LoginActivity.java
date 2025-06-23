@@ -1,12 +1,16 @@
-// === FILE: LoginActivity.java ===
 package com.nguyenkim.nguyenhoangkim_k224111452_k22411c;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.*;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.connectors.SQLiteConnector;
 import com.nguyenkim.nguyenhoangkim_k224111452_k22411c.models.Account;
 
@@ -23,19 +27,20 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Ánh xạ view
+        // Gắn Toolbar làm ActionBar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
         rbAdmin = findViewById(R.id.rbAdmin);
         rbEmployee = findViewById(R.id.rbEmployee);
         btnLogin = findViewById(R.id.btnLogin);
 
-        // DB setup
         connector = new SQLiteConnector(this);
         connector.copyDatabaseFromAssets();
         db = connector.openDatabase();
 
-        // Sự kiện login
         btnLogin.setOnClickListener(v -> handleLogin());
     }
 
@@ -71,5 +76,20 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         cursor.close();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.option_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_about) {
+            startActivity(new Intent(this, AboutActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

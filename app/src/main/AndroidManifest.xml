@@ -25,6 +25,8 @@
         <activity
             android:name=".AdminTaskActivity"
             android:exported="false" />
+        <activity android:name=".AboutActivity"
+            />
         <activity
             android:name=".TaskManagementActivity"
             android:exported="false" />

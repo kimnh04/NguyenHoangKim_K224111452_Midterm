@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txtCustomerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tên khách hàng"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtCustomerPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SĐT: 0123456789"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtCallStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trạng thái gọi"
+        android:textSize="14sp"
+        android:textColor="#666666" />
+</LinearLayout>
